@@ -11,3 +11,4 @@ var connection = mysql.createConnection({
 
 module.exports = connection;
 
+var consultas = require('../lib/consultas');

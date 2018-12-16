@@ -1,16 +1,26 @@
-var con = require('../lib/conexionbd');
+const con = require('../lib/conexionbd');
 
 function obtenerTodas ( req, res ) {
-    // var pelis = req.query.pelis;    
-    var sql = "select * from pelicula"
-    var gen = "select * from genero where " +anio+ "= genero.id=genero_id.id";
-    var anio = "select * from anio"
-    con.query( sql, function(error, resultado, fields){
-        if(error) {
+    
+    let sql = `SELECT * FROM pelicula INNER JOIN genero ON pelicula.genero_id = genero.id `;
+                       
+    
+    if( req.query.titulo ) { 
+    sql += `AND titulo LIKE "%${req.query.titulo}%" `;
+    } if( req.query.genero ) {
+        sql += `AND genero.id = ${req.query.genero}`;
+    } if( req.query.anio ) {
+        sql += `AND anio = ${req.query.anio}`;
+    } if ( req.query.orden ) {
+        sql += `AND orden = ${req.query.orden}`
+    }
+
+    con.query( sql, function(error, resultado, fields) {
+        if (error) {
         console.log("Hubo un error", error.message);
         return res.status(404).send("Hubo un error en la consulta");   
     } 
-    var response = {
+    let response = {
         'peliculas':resultado
     };
 
@@ -20,9 +30,9 @@ function obtenerTodas ( req, res ) {
 }
 
 function obtenerGeneros ( req, res ){
-    var sql = "select * from genero"
+    var traerGeneros = "select * from genero"
     var generos = req.query.generos
-    con.query( sql, function( error, resultado, fields){
+    con.query( traerGeneros, function( error, resultado, fields){
         if(error) {
             console.log("Hubo un error", error.message);
             return res.status(404).send("Error en la consuta");
@@ -44,3 +54,4 @@ module.exports = {
 
 //Esta es la ruta que pide el front-end
 //peliculas?pagina=1&genero=2&cantidad=52&columna_orden=titulo&tipo_orden=ASC
+
