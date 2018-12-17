@@ -45,14 +45,14 @@ function obtenerTodas ( req, res ) {
 }
 
 function obtenerGeneros ( req, res ){
-    var traerGeneros = "select * from genero"
-    var generos = req.query.generos
+    let traerGeneros = "select * from genero"
+    //let generos = req.query.generos
     con.query( traerGeneros, function( error, resultado, fields){
         if(error) {
             console.log("Hubo un error", error.message);
             return res.status(404).send("Error en la consuta");
         }
-        var response = {
+        let response = {
             'generos':resultado
         };
 
@@ -61,9 +61,30 @@ function obtenerGeneros ( req, res ){
 
 }
 
+function obtenerInfoPelicula (req, res){
+    let traerInfo = `SELECT pelicula.poster, pelicula.titulo, pelicula.trama, pelicula.anio, pelicula.fecha_lanzamiento, pelicula.director, pelicula.duracion, pelicula.puntuacion, genero.nombre, actor.nombre `
+                        + `FROM actor_pelicula `
+                        + `INNER JOIN pelicula ON pelicula_id = pelicula.id `
+                        + `INNER JOIN actor ON actor_id = actor.id `
+                        + `INNER JOIN genero ON genero_id = genero.id `
+                        + `WHERE pelicula.id = ${req.params.pelicula.id}`;
+
+    con.query( traerInfo, function( error, resultado, fields){
+        if(error) {
+            console.log("Hubo un error", error.message);
+            return res.status(404).send("Error en la consuta");
+        }
+        
+
+        res.send(JSON.stringify(response));
+    });
+
+}
+
 module.exports = {
     obtenerTodas: obtenerTodas,
-    obtenerGeneros:obtenerGeneros
+    obtenerGeneros: obtenerGeneros,
+    obtenerInfoPelicula: obtenerInfoPelicula,
 };
 
 

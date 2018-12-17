@@ -1,11 +1,11 @@
 //paquetes necesarios para el proyecto
-var express = require('express');
-var bodyParser = require('body-parser');
-var cors = require('cors');
-var controlador = require('./controladores/controlador');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const controlador = require('./controladores/controlador');
 
 
-var app = express();
+const app = express();
 
 app.use(cors());
 
@@ -20,10 +20,10 @@ app.get('/peliculas', controlador.obtenerTodas);
 
 app.get('/generos', controlador.obtenerGeneros);
 
-
+app.get('pelicula/:id', controlador.obtenerInfoPelicula);
 
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación
-var puerto = '8080';
+const puerto = '8080';
 
 app.listen(puerto, function () {
   console.log( `Escuchando en el puerto ${puerto}`);
